@@ -1,5 +1,5 @@
 import Layout from "../components/layout/Layout";
-import RepositoryCard from "../components/ui/RepositoryCard";
+import RepositoryCard from "../components/repository/RepositoryCard";
 import { repositories } from "../data/repositories";
 
 export default function Dashboard() {
