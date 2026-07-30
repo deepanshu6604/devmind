@@ -5,11 +5,13 @@ import {
   BookOpen,
   FileText,
   Settings,
+  GitBranch,
 } from "lucide-react";
 import { NavLink } from "react-router-dom";
 
 const menu = [
   { name: "Dashboard", icon: LayoutDashboard, path: "/" },
+  { name: "Repository", icon: GitBranch, path: "/repository" },
   { name: "Projects", icon: FolderGit2, path: "/projects" },
   { name: "AI Chat", icon: MessageSquare, path: "/chat" },
   { name: "Onboarding", icon: BookOpen, path: "/onboarding" },

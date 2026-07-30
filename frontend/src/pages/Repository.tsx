@@ -1,105 +1,185 @@
-import Layout from "../components/layout/Layout";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { repositories } from "../data/repositories";
-import { useState } from "react";
+
+import Layout from "../components/layout/Layout";
+import RepositoryReport from "../components/repository/RepositoryReport";
+import AnalysisHistory from "../components/repository/AnalysisHistory";
+
+import {
+  analyzeRepository,
+  getHistory,
+} from "../services/repositoryService";
+
+import { getRepository } from "../services/projectService";
+
+import type { AnalysisResponse } from "../types/analysis";
+import type { Repository as RepositoryType } from "../types/repository";
 
 export default function Repository() {
   const { id } = useParams();
 
-  const repository = repositories.find((repo) => repo.id === id);
+  const [repository, setRepository] =
+    useState<RepositoryType | null>(null);
 
-  const [loading, setLoading] = useState(false);
-  const [showResult, setShowResult] = useState(false);
+  const [analysis, setAnalysis] =
+    useState<AnalysisResponse | null>(null);
 
-  if (!repository) {
-    return (
-      <Layout>
-        <h1>Repository Not Found</h1>
-      </Layout>
-    );
-  }
+  const [history, setHistory] = useState<any[]>([]);
 
-  const analyzeRepository = () => {
+  const [loading, setLoading] =
+    useState(false);
+
+  useEffect(() => {
+    async function loadRepository() {
+      if (!id) return;
+
+      try {
+        const repo = await getRepository(Number(id));
+
+        setRepository(repo);
+
+        const previousHistory =
+          await getHistory(Number(id));
+
+        setHistory(previousHistory);
+      } catch (error) {
+        console.error(error);
+        alert("Failed to load repository.");
+      }
+    }
+
+    loadRepository();
+  }, [id]);
+
+  const handleAnalyze = async () => {
+    if (!repository) {
+      alert("Repository not loaded.");
+      return;
+    }
+
     setLoading(true);
 
-    setTimeout(() => {
+    try {
+      const result = await analyzeRepository(
+        repository.path,
+        Number(id)
+      );
+
+      setAnalysis(result);
+
+      const previousHistory =
+        await getHistory(Number(id));
+
+      setHistory(previousHistory);
+
+    } catch (error) {
+      console.error(error);
+      alert("Failed to analyze repository.");
+    } finally {
       setLoading(false);
-      setShowResult(true);
-    }, 2000);
+    }
   };
 
   return (
     <Layout>
-      <h1 className="text-4xl font-bold">
-        {repository.name}
-      </h1>
 
-      <p className="mt-2 text-gray-400">
-        {repository.language}
-      </p>
+      {/* Header */}
 
-      <div className="mt-8 rounded-xl border border-gray-800 bg-[#111827] p-6">
+      <div className="mb-8">
 
-        <div className="space-y-3">
+        <h1 className="text-4xl font-bold">
+          {repository?.name ?? "Repository"}
+        </h1>
 
-          <p>📁 Files : {repository.files}</p>
+        <p className="mt-2 text-gray-400">
+          {repository?.path}
+        </p>
 
-          <p>Status : {repository.status}</p>
+        {repository && (
+          <div className="mt-4 flex gap-3">
+
+            <span className="rounded-full bg-blue-600 px-3 py-1 text-sm">
+              {repository.language}
+            </span>
+
+            <span className="rounded-full bg-green-600 px-3 py-1 text-sm">
+              {repository.status}
+            </span>
+
+          </div>
+        )}
+
+      </div>
+
+      {/* Analyze Button */}
+
+      <div className="rounded-xl border border-gray-800 bg-[#111827] p-6">
+
+        <button
+          onClick={handleAnalyze}
+          disabled={loading}
+          className={`rounded-lg px-6 py-3 font-semibold transition-all duration-300 ${
+            loading
+              ? "cursor-not-allowed bg-gray-600"
+              : "bg-blue-600 hover:bg-blue-700 hover:scale-105"
+          }`}
+        >
+          {loading
+            ? "Analyzing..."
+            : "Analyze Repository"}
+        </button>
+
+      </div>
+
+      {/* Loading */}
+
+      {loading && (
+
+        <div className="mt-6 rounded-xl border border-blue-700 bg-[#111827] p-6">
+
+          <div className="flex items-center gap-4">
+
+            <div className="h-10 w-10 animate-spin rounded-full border-4 border-blue-500 border-t-transparent"></div>
+
+            <div>
+
+              <p className="text-lg font-semibold text-blue-400">
+                Analyzing Repository...
+              </p>
+
+              <p className="text-gray-400">
+                Scanning folders...
+              </p>
+
+            </div>
+
+          </div>
 
         </div>
 
-        {!loading && !showResult && (
+      )}
 
-          <button
-            onClick={analyzeRepository}
-            className="mt-8 rounded-lg bg-blue-600 px-6 py-3 hover:bg-blue-700"
-          >
-            Analyze Repository
-          </button>
+      {/* Analysis Report */}
 
-        )}
+      {analysis && (
 
-        {loading && (
+        <div className="mt-8">
 
-          <div className="mt-8">
+          <RepositoryReport
+            analysis={analysis}
+          />
 
-            <p>Analyzing Repository...</p>
+        </div>
 
-            <div className="mt-4 h-2 rounded bg-gray-700">
+      )}
 
-              <div className="h-2 w-full animate-pulse rounded bg-blue-500"></div>
+      {/* Analysis History */}
 
-            </div>
+      <div className="mt-8">
 
-          </div>
-
-        )}
-
-        {showResult && (
-
-          <div className="mt-8 rounded-lg border border-green-700 bg-[#0F172A] p-6">
-
-            <h2 className="text-2xl font-semibold">
-              Repository Analysis
-            </h2>
-
-            <div className="mt-5 space-y-3">
-
-              <p>✅ Backend : FastAPI</p>
-
-              <p>✅ Frontend : React</p>
-
-              <p>✅ Database : MongoDB</p>
-
-              <p>✅ Authentication : JWT</p>
-
-              <p>🧠 Estimated Learning Time : 28 Minutes</p>
-
-            </div>
-
-          </div>
-
-        )}
+        <AnalysisHistory
+          history={history}
+        />
 
       </div>
 

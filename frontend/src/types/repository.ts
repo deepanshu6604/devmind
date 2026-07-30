@@ -1,7 +1,7 @@
 export interface Repository {
-    id: string;
-    name: string;
-    language: string;
-    files: number;
-    status: "Ready" | "Analyzing";
+  id: number;
+  name: string;
+  path: string;
+  language: string;
+  status: string;
 }

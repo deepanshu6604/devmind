@@ -18,13 +18,15 @@ export default function RepositoryCard({ repository }: Props) {
       </h2>
 
       <p className="mt-2 text-gray-400">
-        {repository.language}
+        {repository.path}
       </p>
 
-      <div className="mt-4 flex justify-between text-sm">
-        <span>{repository.files} files</span>
+      <div className="mt-4 flex justify-between items-center text-sm">
+        <span className="rounded-full bg-gray-800 px-3 py-1 text-blue-400">
+          {repository.language}
+        </span>
 
-        <span className="text-green-400">
+        <span className="text-green-400 font-medium">
           {repository.status}
         </span>
       </div>

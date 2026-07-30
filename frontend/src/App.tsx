@@ -13,6 +13,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/repository/:id" element={<Repository />} />
+        <Route path="/repository" element={<Repository />} />
         <Route path="/" element={<Dashboard />} />
         <Route path="/projects" element={<Projects />} />
         <Route path="/chat" element={<Chat />} />
