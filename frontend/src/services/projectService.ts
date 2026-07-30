@@ -1,7 +1,8 @@
 import axios from "axios";
 import type { Repository } from "../types/repository";
 
-const API = "http://127.0.0.1:8000/api/repositories";
+
+const API = `${import.meta.env.VITE_API_URL}/repositories`;
 
 export async function getRepositories() {
   const response = await axios.get<Repository[]>(API);
