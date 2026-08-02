@@ -61,12 +61,7 @@ def startup():
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        os.getenv(
-            "https://devmind-orpin.vercel.app",
-            "http://localhost:5173",
-        )
-    ],
+    allow_origin_regex=r"https://.*\.vercel\.app",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
