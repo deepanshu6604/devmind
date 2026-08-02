@@ -6,37 +6,52 @@ interface Props {
 }
 
 export default function AddRepositoryModal({ onAdded }: Props) {
+
   const [name, setName] = useState("");
-  const [path, setPath] = useState("");
+  const [description, setDescription] = useState("");
   const [language, setLanguage] = useState("");
 
   async function handleSubmit() {
-    if (!name || !path) {
-      alert("Fill all required fields");
+
+    if (!name || !language) {
+      alert("Repository name and language are required.");
       return;
     }
 
-    await addRepository({
-      name,
-      path,
-      language,
-      status: "Ready",
-    });
+    try {
 
-    setName("");
-    setPath("");
-    setLanguage("");
+      await addRepository({
+        name,
+        description,
+        language,
+        status: "Ready",
+      });
 
-    onAdded();
+      setName("");
+      setDescription("");
+      setLanguage("");
+
+      onAdded();
+
+    } catch (error) {
+
+      console.error(error);
+
+      alert("Unable to save repository.");
+
+    }
+
   }
 
   return (
     <div className="rounded-xl border border-gray-800 bg-[#111827] p-6">
-      <h2 className="text-2xl font-semibold mb-6">
+
+      <h2 className="mb-6 text-2xl font-semibold">
         Add Repository
       </h2>
 
       <div className="space-y-4">
+
         <input
           className="w-full rounded bg-[#1F2937] p-3"
           placeholder="Repository Name"
@@ -44,11 +59,12 @@ export default function AddRepositoryModal({ onAdded }: Props) {
           onChange={(e) => setName(e.target.value)}
         />
 
-        <input
+        <textarea
           className="w-full rounded bg-[#1F2937] p-3"
-          placeholder="Repository Path"
-          value={path}
-          onChange={(e) => setPath(e.target.value)}
+          placeholder="Description (optional)"
+          rows={3}
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
         />
 
         <input
@@ -64,7 +80,9 @@ export default function AddRepositoryModal({ onAdded }: Props) {
         >
           Save Repository
         </button>
+
       </div>
+
     </div>
   );
 }

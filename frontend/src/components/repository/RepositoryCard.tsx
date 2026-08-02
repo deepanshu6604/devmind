@@ -11,24 +11,36 @@ export default function RepositoryCard({ repository }: Props) {
   return (
     <div
       onClick={() => navigate(`/repository/${repository.id}`)}
-      className="cursor-pointer rounded-xl border border-gray-800 bg-[#111827] p-5 hover:border-blue-500 hover:scale-[1.02] transition-all duration-200"
+      className="cursor-pointer rounded-xl border border-gray-800 bg-[#111827] p-5 transition-all duration-200 hover:border-blue-500 hover:scale-[1.02]"
     >
-      <h2 className="text-xl font-semibold">
-        📁 {repository.name}
-      </h2>
+      <div className="flex items-center justify-between">
 
-      <p className="mt-2 text-gray-400">
-        {repository.path}
+        <h2 className="text-xl font-semibold">
+          📁 {repository.name}
+        </h2>
+
+        {repository.is_demo === 1 && (
+          <span className="rounded-full bg-yellow-600 px-3 py-1 text-xs font-semibold">
+            DEMO
+          </span>
+        )}
+
+      </div>
+
+      <p className="mt-3 text-gray-400">
+        {repository.description}
       </p>
 
-      <div className="mt-4 flex justify-between items-center text-sm">
+      <div className="mt-5 flex items-center justify-between">
+
         <span className="rounded-full bg-gray-800 px-3 py-1 text-blue-400">
           {repository.language}
         </span>
 
-        <span className="text-green-400 font-medium">
+        <span className="text-green-400">
           {repository.status}
         </span>
+
       </div>
     </div>
   );
