@@ -1,4 +1,5 @@
 import type { TreeItem } from "../../types/analysis";
+// 1. Create a local type that extends your existing TreeItem
 
 interface Props {
   tree?: TreeItem[];

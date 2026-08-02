@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { addRepository } from "../../services/projectService";
+import { addRepository } from "../../services/projectService.ts";
 
 interface Props {
   onAdded: () => void;
@@ -25,6 +25,9 @@ export default function AddRepositoryModal({ onAdded }: Props) {
         description,
         language,
         status: "Ready",
+        upload_path: "",
+        is_demo: 0,
+        created_at: new Date().toISOString(),
       });
 
       setName("");

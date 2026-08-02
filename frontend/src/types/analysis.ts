@@ -18,6 +18,7 @@ export interface Scan {
 export interface TreeItem {
   name: string;
   type: "file" | "folder";
+  children?: TreeItem[];
 }
 
 export interface AnalysisResponse {
