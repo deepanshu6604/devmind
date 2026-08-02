@@ -63,7 +63,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         os.getenv(
-            "FRONTEND_URL",
+            "https://devmind-orpin.vercel.app",
             "http://localhost:5173",
         )
     ],

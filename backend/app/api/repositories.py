@@ -17,7 +17,7 @@ class RepositoryCreate(BaseModel):
     language: str
 
 
-@router.get("/")
+@router.get("")
 def get_repositories():
     db: Session = SessionLocal()
 
@@ -49,7 +49,7 @@ def get_repository(repository_id: int):
         db.close()
 
 
-@router.post("/")
+@router.post("")
 def create_repository(data: RepositoryCreate):
     db: Session = SessionLocal()
 
