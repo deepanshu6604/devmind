@@ -1,7 +1,1 @@
-{
-  "name": "devmind-demo",
-  "dependencies": {
-    "react": "^18.0.0",
-    "axios": "^1.0.0"
-  }
-}
+{}
